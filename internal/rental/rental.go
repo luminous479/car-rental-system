@@ -7,4 +7,4 @@ type Rental struct {
 	Days       int     `json:"days"`
 	TotalPrice float64 `json:"total_price"`
 	Returned   bool    `json:"returned"`
-}
+}typicode
