@@ -2,47 +2,58 @@ package main
 
 import (
 	"fmt"
-	"sync"
 	"time"
 )
 
-func getCarInfo(carID string, wg *sync.WaitGroup) {
-	defer wg.Done()
+type CarInfo struct{ Name string }
+type Availability struct{ Available bool }
+type Pricing struct{ PricePerDay float64 }
+type Reviews struct{ AverageRating float64 }
+
+func getCarInfo(carID string, ch chan<- CarInfo) {
 	time.Sleep(1 * time.Second)
-	fmt.Println("Car info fetched")
+	ch <- CarInfo{Name: "Toyota Corolla"}
 }
 
-func getAvailability(carID string, wg *sync.WaitGroup) {
-	defer wg.Done()
+func getAvailability(carID string, ch chan<- Availability) {
 	time.Sleep(1 * time.Second)
-	fmt.Println("Availability fetched")
+	ch <- Availability{Available: true}
 }
 
-func getPricing(carID string, wg *sync.WaitGroup) {
-	defer wg.Done()
-	time.Sleep(3 * time.Second)
-	fmt.Println("Pricing fetched")
+func getPricing(carID string, ch chan<- Pricing) {
+	time.Sleep(1 * time.Second)
+	ch <- Pricing{PricePerDay: 35.0}
 }
 
-func getReviews(carID string, wg *sync.WaitGroup) {
-	defer wg.Done()
+func getReviews(carID string, ch chan<- Reviews) {
 	time.Sleep(1 * time.Second)
-	fmt.Println("Reviews fetched")
+	ch <- Reviews{AverageRating: 4.5}
 }
 
 func main() {
 	start := time.Now()
 	carID := "car-123"
 
-	var wg sync.WaitGroup
-	wg.Add(4)
+	carCh := make(chan CarInfo, 1)
+	availCh := make(chan Availability, 1)
+	priceCh := make(chan Pricing, 1)
+	reviewsCh := make(chan Reviews, 1)
 
-	go getCarInfo(carID, &wg)
-	go getAvailability(carID, &wg)
-	go getPricing(carID, &wg)
-	go getReviews(carID, &wg)
+	go getCarInfo(carID, carCh)
+	go getAvailability(carID, availCh)
+	go getPricing(carID, priceCh)
+	go getReviews(carID, reviewsCh)
 
-	wg.Wait()
+	// Receive from each channel — order here is just the order we choose
+	// to *read* results, not the order they *finish* in.
+	info := <-carCh
+	avail := <-availCh
+	price := <-priceCh
+	reviews := <-reviewsCh
 
-	fmt.Println("All done after:", time.Since(start))
+	fmt.Printf("Car: %+v\n", info)
+	fmt.Printf("Availability: %+v\n", avail)
+	fmt.Printf("Pricing: %+v\n", price)
+	fmt.Printf("Reviews: %+v\n", reviews)
+	fmt.Println("Total time:", time.Since(start))
 }
