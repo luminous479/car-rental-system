@@ -6,12 +6,12 @@ import (
 	models "github.com/luminous479/car-rental-system/internal/model"
 )
 
-type carRepository struct {
+type CarRepository struct {
 	cars []models.Car
 }
 
-func NewCarRepository() *carRepository {
-	return &carRepository{
+func NewCarRepository() *CarRepository {
+	return &CarRepository{
 		cars: []models.Car{
 			{ID: 1, Brand: "Toyota", Model: "Camry", Year: 2020, DailyRate: 50.0, Available: true},
 			{ID: 2, Brand: "Honda", Model: "Civic", Year: 2019, DailyRate: 45.0, Available: false},
@@ -20,7 +20,7 @@ func NewCarRepository() *carRepository {
 	}
 }
 
-func (r *carRepository) GetByID(id string) (*models.Car, bool) {
+func (r *CarRepository) GetByID(id string) (*models.Car, bool) {
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
 		return nil, false
