@@ -1,14 +1,14 @@
 package main
 
 import (
-	"context"
+	// "context"
 	"net/http"
 
 	"fmt"
-	"math/rand"
-	"time"
+// 	"math/rand"
+// 	"time"
+// )
 )
-
 // type CarInfo struct{ Name string }
 // type Availability struct{ Available bool }
 // type Pricing struct{ PricePerDay float64 }
@@ -134,7 +134,7 @@ func main() {
 	// 	reviews = &reviewsRes.value
 	// }
 
-	// // --- Final combined response ---
+	// //go  --- Final combined response ---
 	// fmt.Printf("\nCar: %+v\n", carRes.value)
 	// fmt.Printf("Availability: %+v\n", availRes.value)
 	// fmt.Printf("Pricing: %+v\n", priceRes.value)
@@ -154,6 +154,7 @@ func main() {
 
 	err := http.ListenAndServe(":8080",nil)
 	if err != nil {
+		
 		fmt.Println("Error starting server:", err)
 	}
 }
